@@ -18,5 +18,17 @@ model Asset {
   lng       Float
   status    String   // active, delayed, offline
   speed     Float
-  updatedAt DateTime @default(now()) @updatedAt
+  updatedAt DateTime @updatedAt
+  history   LocationHistory[]
+}
+
+model LocationHistory {
+  id        String   @id @default(uuid())
+  lat       Float
+  lng       Float
+  timestamp DateTime @default(now())
+  assetId   String
+  asset     Asset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId])
 }

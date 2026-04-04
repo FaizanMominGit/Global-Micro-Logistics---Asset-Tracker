@@ -18,12 +18,20 @@ export async function POST() {
 
         const latJitter = (Math.random() - 0.5) * degreeDelta * 2;
         const lngJitter = (Math.random() - 0.5) * degreeDelta * 2;
+        const newLat = asset.lat + latJitter;
+        const newLng = asset.lng + lngJitter;
 
       return prisma.asset.update({
         where: { id: asset.id },
         data: {
-          lat: asset.lat + latJitter,
-          lng: asset.lng + lngJitter,
+          lat: newLat,
+          lng: newLng,
+          history: {
+            create: {
+              lat: newLat,
+              lng: newLng,
+            }
+          }
         }
       });
     });
