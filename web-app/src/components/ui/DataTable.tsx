@@ -1,0 +1,109 @@
+"use client";
+
+import * as React from "react";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+} from "@tanstack/react-table";
+import { Button } from "./Button";
+
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+}
+
+export function DataTable<TData, TValue>({
+  columns,
+  data,
+}: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+  });
+
+  return (
+    <div>
+      <div className="rounded-md border border-border bg-card">
+        <div className="w-full overflow-auto">
+          <table className="w-full caption-bottom text-sm">
+            <thead className="[&_tr]:border-b [&_tr]:border-border bg-slate-50 dark:bg-slate-900/50">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id} className="border-b border-border transition-colors hover:bg-slate-100/50 dark:hover:bg-slate-800/50">
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <th
+                        key={header.id}
+                        className="h-12 px-4 text-left align-middle font-medium text-slate-500 dark:text-slate-400 [&:has([role=checkbox])]:pr-0"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </th>
+                    );
+                  })}
+                </tr>
+              ))}
+            </thead>
+            <tbody className="[&_tr:last-child]:border-0">
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    className="border-b border-border transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={columns.length} className="h-24 text-center">
+                    No results.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div>
+    </div>
+  );
+}
