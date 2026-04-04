@@ -10,7 +10,25 @@ const LiveMap = dynamic(() => import('@/components/map/LiveMap'), {
   loading: () => <Skeleton className="w-full h-full min-h-[300px] rounded-lg" />
 });
 
+import { useLiveAssets } from "@/hooks/useLiveAssets";
+
 export default function DashboardPage() {
+  const { assets } = useLiveAssets();
+
+  // Dynamic calculations from real-time database state
+  const activeCount = assets.filter(a => a.status === "active").length;
+  const delayedCount = assets.filter(a => a.status === "delayed").length;
+  const offlineCount = assets.filter(a => a.status === "offline").length;
+  const totalFleet = assets.length;
+  
+  // Calculate average speed as a proxy for transit efficiency
+  const avgSpeed = totalFleet > 0 
+    ? Math.round(assets.reduce((acc, a) => acc + a.speed, 0) / totalFleet)
+    : 0;
+
+  // Last 5 recently updated assets
+  const recentAssets = [...assets].sort((a, b) => b.speed - a.speed).slice(0, 5);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
@@ -23,10 +41,10 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <MetricCard title="Active Shipments" icon={Package} value="1,234" description="+20% from last month" />
-        <MetricCard title="Transit Efficiency" icon={Activity} value="98.5%" description="+2.1% from last month" />
-        <MetricCard title="Alerts & Delays" icon={AlertTriangle} value="12" description="3 critical alerts" alert />
-        <MetricCard title="Total Fleet" icon={Truck} value="4,562" description="124 currently offline" />
+        <MetricCard title="Active Shipments" icon={Package} value={activeCount.toString()} description={`${activeCount} carriers currently in transit`} />
+        <MetricCard title="Avg Fleet Speed" icon={Activity} value={`${avgSpeed} mph`} description="Collective movement efficiency" />
+        <MetricCard title="Alerts & Delays" icon={AlertTriangle} value={delayedCount.toString()} description={`${delayedCount} critical delays detected`} alert={delayedCount > 0} />
+        <MetricCard title="Total Fleet" icon={Truck} value={totalFleet.toString()} description={`${offlineCount} currently offline`} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
@@ -41,19 +59,39 @@ export default function DashboardPage() {
 
         <Card className="col-span-full lg:col-span-3">
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
+            <CardTitle>High-Speed Telemetry</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="flex items-center space-x-4">
-                  <Skeleton className="h-10 w-10 rounded-full" />
-                  <div className="space-y-2 flex-1">
-                    <Skeleton className="h-4 w-[80%]" />
-                    <Skeleton className="h-4 w-[60%]" />
+              {assets.length === 0 ? (
+                [1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="flex items-center space-x-4">
+                    <Skeleton className="h-10 w-10 rounded-full" />
+                    <div className="space-y-2 flex-1">
+                      <Skeleton className="h-4 w-[80%]" />
+                      <Skeleton className="h-4 w-[60%]" />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                recentAssets.map((asset) => (
+                  <div key={asset.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                    <div className="flex items-center space-x-4">
+                      <div className={`p-2 rounded-full ${asset.status === "active" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
+                        <Activity className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium leading-none">{asset.name}</p>
+                        <p className="text-xs text-slate-500 mt-1 uppercase tracking-tighter">{asset.type} • {asset.id}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold">{asset.speed} mph</p>
+                      <p className={`text-[10px] ${asset.status === "active" ? "text-green-600" : "text-amber-600"}`}>In Sync</p>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
