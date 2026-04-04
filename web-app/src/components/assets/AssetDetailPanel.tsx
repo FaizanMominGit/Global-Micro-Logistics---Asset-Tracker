@@ -3,7 +3,13 @@
 import { useAssetDetails } from "@/hooks/useAssetDetails";
 import { LiveAsset } from "@/hooks/useLiveAssets";
 import { Badge } from "@/components/ui/Badge";
-import HistoryMap from "./HistoryMap";
+import dynamic from 'next/dynamic';
+
+const HistoryMap = dynamic(() => import("./HistoryMap"), { 
+  ssr: false,
+  loading: () => <div className="h-48 w-full bg-slate-100 dark:bg-slate-800 animate-pulse rounded-xl" />
+});
+
 import { 
   Truck, 
   Ship, 
@@ -15,17 +21,24 @@ import {
   History,
   ShieldCheck,
   Zap,
-  Settings2
+  Settings2,
+  Trash2,
+  Loader2
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface AssetDetailPanelProps {
   asset: LiveAsset;
+  onClose?: () => void;
 }
 
-export function AssetDetailPanel({ asset }: AssetDetailPanelProps) {
+export function AssetDetailPanel({ asset, onClose }: AssetDetailPanelProps) {
   const { assetHistory, updateAsset, isUpdating } = useAssetDetails(asset.id);
   const [localSpeed, setLocalSpeed] = useState(asset.speed.toString());
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const queryClient = useQueryClient();
 
   // Sync local speed state when asset prop changes
   useEffect(() => {
@@ -41,6 +54,27 @@ export function AssetDetailPanel({ asset }: AssetDetailPanelProps) {
 
   const handleStatusChange = (status: string) => {
     updateAsset({ status });
+  };
+
+  const handleDecommission = async () => {
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      setTimeout(() => setConfirmDelete(false), 3000);
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/assets/${asset.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Decommissioning failed");
+      
+      await queryClient.invalidateQueries({ queryKey: ["live-assets"] });
+      if (onClose) onClose();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to decommission asset.");
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -156,6 +190,31 @@ export function AssetDetailPanel({ asset }: AssetDetailPanelProps) {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Decommissioning Action */}
+      <div className="pt-6 border-t border-border">
+        <button
+          onClick={handleDecommission}
+          disabled={isDeleting}
+          className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-bold transition-all ${
+            confirmDelete 
+            ? "bg-red-600 border-red-600 text-white animate-pulse" 
+            : "bg-transparent border-red-200 dark:border-red-900/30 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
+          }`}
+        >
+          {isDeleting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <>
+              <Trash2 className="h-4 w-4" />
+              {confirmDelete ? "Confirm Decommission" : "Decommission Asset"}
+            </>
+          )}
+        </button>
+        <p className="text-[10px] text-center text-slate-400 mt-3 px-4">
+          Decommissioning will permanently remove this asset and all telemetry history from the global registry.
+        </p>
       </div>
     </div>
   );

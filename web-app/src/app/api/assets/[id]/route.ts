@@ -53,3 +53,28 @@ export async function PATCH(
     return NextResponse.json({ error: "Failed to update asset" }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    
+    // First delete all location history for this asset to maintain referential integrity
+    await prisma.locationHistory.deleteMany({
+      where: { assetId: id },
+    });
+
+    // Then delete the asset itself
+    await prisma.asset.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ success: true, message: "Asset decommissioned successfully" });
+  } catch (error) {
+    console.error("DELETE Asset Error:", error);
+    return NextResponse.json({ error: "Failed to decommission asset" }, { status: 500 });
+  }
+}
+

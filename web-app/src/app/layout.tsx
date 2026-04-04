@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { DynamicThemeProvider as ThemeProvider } from "@/components/DynamicThemeProvider";
 import { AppShell } from "@/components/layout/AppShell";
 import QueryProvider from "@/components/QueryProvider";
 

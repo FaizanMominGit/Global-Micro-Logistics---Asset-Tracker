@@ -8,6 +8,7 @@ import { Package, Plus } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Sheet } from "@/components/ui/Sheet";
 import { AssetDetailPanel } from "@/components/assets/AssetDetailPanel";
+import { ProvisionAssetModal } from "@/components/assets/ProvisionAssetModal";
 
 export default function AssetsPage() {
   const { assets } = useLiveAssets();
@@ -16,6 +17,7 @@ export default function AssetsPage() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [selectedAsset, setSelectedAsset] = useState<LiveAsset | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isProvisionModalOpen, setIsProvisionModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -50,7 +52,10 @@ export default function AssetsPage() {
             Real-time control center for {assets.length} synchronized assets.
           </p>
         </div>
-        <Button className="bg-primary-600 hover:bg-primary-700 text-white shadow-lg">
+        <Button 
+          onClick={() => setIsProvisionModalOpen(true)}
+          className="bg-primary-600 hover:bg-primary-700 text-white shadow-lg"
+        >
           <Plus className="mr-2 h-4 w-4" />
           Provision New Asset
         </Button>
@@ -85,9 +90,18 @@ export default function AssetsPage() {
           title="Telemetry Drill-down"
           description={`Real-time data for ${selectedAsset.name}`}
         >
-          <AssetDetailPanel asset={selectedAsset} />
+          <AssetDetailPanel 
+            asset={selectedAsset} 
+            onClose={() => setIsDrawerOpen(false)} 
+          />
         </Sheet>
       )}
+
+      {/* Provisioning Sheet */}
+      <ProvisionAssetModal 
+        isOpen={isProvisionModalOpen}
+        onClose={() => setIsProvisionModalOpen(false)}
+      />
     </div>
   );
 }
