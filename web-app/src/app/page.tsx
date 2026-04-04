@@ -1,6 +1,14 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Package, Activity, AlertTriangle, Truck } from "lucide-react";
+import dynamic from 'next/dynamic';
+
+const LiveMap = dynamic(() => import('@/components/map/LiveMap'), {
+  ssr: false,
+  loading: () => <Skeleton className="w-full h-full min-h-[300px] rounded-lg" />
+});
 
 export default function DashboardPage() {
   return (
@@ -26,11 +34,8 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle>Global Asset Map</CardTitle>
           </CardHeader>
-          <CardContent className="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-900/50 rounded-lg m-6 mt-0">
-            {/* Skeleton simulating map loading */}
-            <div className="w-full h-full p-4 flex flex-col gap-4">
-              <Skeleton className="w-full h-full min-h-[300px] rounded-lg" />
-            </div>
+          <CardContent className="h-[400px] p-6 pt-0 relative z-0">
+            <LiveMap />
           </CardContent>
         </Card>
 
