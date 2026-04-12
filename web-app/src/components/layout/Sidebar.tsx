@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { LayoutDashboard, Package, Map, Settings } from "lucide-react";
+import { LayoutDashboard, Package, Map, Settings, PieChart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Assets", href: "/assets", icon: Package },
   { name: "Live Map", href: "/map", icon: Map },
+  { name: "Analytics", href: "/analytics", icon: PieChart },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 

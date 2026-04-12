@@ -1,0 +1,44 @@
+# OmniTrack - Incremental Changelog
+
+This document tracks all the architectural and feature changes performed iteratively during the OmniTrack project lifecycle, from foundational UI setup to the data-driven analytics engine.
+
+## Increment 1 & 2: Foundation & Dynamic Mapping
+**Focus:** Project Bootstrap & Interactive Web GIS
+- Initialized the Next.js 15+ frontend utilizing Tailwind CSS for premium, modern aesthetics.
+- Built the foundational App Shell (Sidebar, Header, Main layout).
+- Configured dynamic `Leaflet.js` to render a real-time global map.
+- Setup simulated GPS point injection to begin moving markers without backend connections.
+- Designed dynamic theme support (Dark/Light mode).
+
+## Increment 3: Real Database & API Logic Layer
+**Focus:** Full-Stack Architecture & ORM Integration
+- Transitioned from mock data to a responsive full-stack architecture using a local **SQLite** database.
+- Integrated **Prisma ORM**. Created the `Asset` and `LocationHistory` relational models.
+- Established Next.js API Routes (`/api/assets`) and sync endpoints.
+- Connected the `useLiveAssets` React Query hook to pull real database records for the dashboard metrics (Active Shipments, Avg Speed, Alerts).
+- Solved dynamic routing and background polling synchronization mechanisms.
+
+## Increment 4 & 5: Fleet Management & Telemetry Drill-Down
+**Focus:** Global Fleet Table & Historical Analysis
+- Transitioned the app from a visual map into a robust logistical management interface by creating the `/assets` management page.
+- Implemented an interactive Data Table supporting deep filtering, categorization, and sorting of all tracked assets.
+- Built the `AssetDetailPanel` drawer component allowing administrators to click into a single operation.
+- Enabled Telemetry Drill-Downs inside the drawer to view chronological positional history strings.
+- Fixed complex hydration mismatches caused by Next Themes and Client components.
+
+## Increment 6: Lifecycle Management (CRUD)
+**Focus:** Asset Provisioning and Decommissioning
+- Transformed the platform into a read/write tool by enabling full lifecycle administration.
+- Engineered the `POST /api/assets` endpoint to randomize logical starting coordinates and insert new shipping assets.
+- Built the `DELETE /api/assets/[id]` endpoint to cascade-remove assets and their related location histories.
+- Developed the `ProvisionAssetModal.tsx` for clean user input and categorization (Ship, Truck, Plane).
+- Connected the deletion mechanics into the Details Panel with a safety/confirmation UI loop.
+- Tied mutations back into `React Query` to ensure the dashboard reflects additions/removals immediately across all synchronized peers.
+
+## Increment 7: Global Fleet Analytics & Statistical Dashboards 
+**Focus:** Data Visualization & Geographic Intelligence (Geofencing)
+- Added the `recharts` SVG charting library as an application dependency.
+- Constructed a new `/analytics` central hub with dedicated routing.
+- Designed the **Fleet Distribution Chart** to visualize real-time breakdowns of asset status and physical vehicle types dynamically.
+- Developed an **Efficiency Trends Chart**, projecting real-time velocity arrays against overall active operation density as moving timeline data.
+- Built the **Geofence Alerts Panel**, a live rules-engine UI that loops through operating assets globally and raises priority security/safety warnings if an asset enters hazardous latitudinal zones (like the poles) or slows down critically in active lanes.
