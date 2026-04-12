@@ -73,3 +73,10 @@ This document tracks all the architectural and feature changes performed iterati
 - Reorganized the core application routes into a unified `(dashboard)` route group, enhancing code maintainability and ensuring consistent authentication guard coverage.
 - Optimized the file structure by consolidating all application logic within the `web-app` context.
 - Finalized environment configurations to support seamless local development and deployment.
+
+## Increment 12: Real-Time Global Notifications
+**Focus:** Proactive Logistical Alerts & Spam Protection
+- Integrated **Sonner** as the primary notification engine, providing polished, theme-aware "Toast" messages across the entire platform.
+- Engineered a **Notification Cooldown System** within global state to prevent alert spam, ensuring administrators receive unique notifications for critical events without UI clutter.
+- Implemented real-time **Geofence Breach Alerts** that trigger instantly when assets enter hazardous polar boundaries.
+- Added connection status and speed delay notifications to the centralized push-engine.
