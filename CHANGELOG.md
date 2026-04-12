@@ -80,3 +80,22 @@ This document tracks all the architectural and feature changes performed iterati
 - Engineered a **Notification Cooldown System** within global state to prevent alert spam, ensuring administrators receive unique notifications for critical events without UI clutter.
 - Implemented real-time **Geofence Breach Alerts** that trigger instantly when assets enter hazardous polar boundaries.
 - Added connection status and speed delay notifications to the centralized push-engine.
+
+## Future Increments Roadmap
+Based on the `SYSTEM_DESIGN.md`, the following increments are queued to transition this monolithic MVP into an enterprise-grade distributed system:
+
+### Increment 13: Cloud Infrastructure & Containerization
+- Build Docker configurations to containerize the Next.js application.
+- Migrate from local SQLite to PostgreSQL.
+- Introduce Redis caching layers for high-speed edge delivery.
+
+### Increment 14: Offline-First capabilities & PWA
+- Register Service Workers to cache critical logistical data and support Offline-First rendering.
+- Build mutation synchronization queues so drivers can log data in dead-zones (to trigger upon reconnection).
+
+### Increment 15: Cross-Platform Native Applications
+- Scaffold a React Native (Expo) or Flutter codebase connecting securely to OmniTrack's existing backend architecture.
+
+### Increment 16: Enterprise Observability
+- Integrate Sentry for continuous error tracking and exception handling.
+- Setup Prometheus/Grafana infrastructure for API latency and memory profiling.
