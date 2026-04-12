@@ -58,3 +58,18 @@ This document tracks all the architectural and feature changes performed iterati
 - Engineered `InteractiveLiveMap.tsx`, a specialized wrapper for `react-leaflet` that watches state props and natively executes high-performance Map UI routines (`useMap().flyTo()`) out of the React rendering pipeline.
 - Added Theme-Aware Mapping: The base CARTO map tiles dynamically pivot from "Voyager" (Light Mode) to "Dark Matter" (Dark Mode) based on your system configuration.
 - Crafted `AssetFlyoutList.tsx`, replacing raw text fields with intuitive UI cards acting as an operational directory, enabling one-click "fly-to" logic for instantaneous asset tracking across the globe.
+
+## Increment 10: Authentication & Secure Data Engine
+**Focus:** Platform Security and Administrative Reset Functions
+- Completely overhauled Application Security utilizing the bleeding-edge **Auth.js (`next-auth@beta`)**.
+- Protected all proprietary logistics dashboards via Edge-compatible **Next.js Middleware**, aggressively enforcing authentication routing to a newly designed `/login` interface.
+- Expanded the Database schema utilizing Prisma's powerful relational engines to forge a localized `User` system complete with strict Role-based access control and `bcrypt-ts` password hashing capabilities.
+- Developed an explosive **Danger Zone** configuration tool inside the Settings interface communicating natively with a restricted `/api/admin/reset` endpoint.
+- Empowered system Administrators with the ability to instantly purge all historical trajectory arrays and live telemetry streams—subsequently rebuilding the map's original seed conditions globally with a single click.
+
+## Increment 11: Final Project Rebranding & Organizational Cleanup
+**Focus:** Brand Alignment and Routing Architecture Reorganization
+- Formally renamed the repository and project directory to **OmniTrack** for consistent professional branding.
+- Reorganized the core application routes into a unified `(dashboard)` route group, enhancing code maintainability and ensuring consistent authentication guard coverage.
+- Optimized the file structure by consolidating all application logic within the `web-app` context.
+- Finalized environment configurations to support seamless local development and deployment.

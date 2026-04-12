@@ -32,3 +32,13 @@ model LocationHistory {
 
   @@index([assetId])
 }
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("viewer") // admin, viewer
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

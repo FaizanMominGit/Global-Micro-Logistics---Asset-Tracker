@@ -1,12 +1,26 @@
 import { PrismaClient } from '@prisma/client'
+import { hashSync } from 'bcrypt-ts'
 
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log("Seeding initial logistics fleet...")
+  console.log("Seeding initial logistics fleet and admin account...")
 
   // Clear existing entries to avoid duplication
   await prisma.asset.deleteMany()
+  await prisma.user.deleteMany()
+
+  // Seed Admin
+  const adminPassword = hashSync("password", 10)
+  await prisma.user.create({
+    data: {
+      email: "admin@omnitrack.com",
+      password: adminPassword,
+      name: "System Administrator",
+      role: "admin"
+    }
+  })
+  console.log("Admin account created: admin@omnitrack.com / password")
 
   const assets = [
     { id: "SH-102", name: "Ever Given II", type: "ship", lat: 25.2048, lng: 55.2708, status: "active", speed: 22 },

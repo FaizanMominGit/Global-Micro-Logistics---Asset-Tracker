@@ -22,9 +22,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <QueryProvider>
-            <AppShell>
-              {children}
-            </AppShell>
+            {children}
           </QueryProvider>
         </ThemeProvider>
       </body>
