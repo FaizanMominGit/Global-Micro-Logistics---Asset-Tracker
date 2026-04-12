@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 export type AssetType = "ship" | "truck" | "plane";
 
@@ -15,6 +16,8 @@ export interface LiveAsset {
 }
 
 export function useLiveAssets() {
+  const telemetryInterval = useSettingsStore(state => state.telemetryInterval);
+
   const { data, refetch } = useQuery<LiveAsset[]>({
     queryKey: ["live-assets"],
     queryFn: async () => {
@@ -28,7 +31,7 @@ export function useLiveAssets() {
         position: [a.lat, a.lng]
       }));
     },
-    refetchInterval: 2500, // Sync frontend automatically every 2.5s
+    refetchInterval: telemetryInterval, // Sync frontend automatically based on settings
   });
 
   useEffect(() => {
@@ -39,10 +42,10 @@ export function useLiveAssets() {
       } catch (e) {
         console.error(e);
       }
-    }, 2500);
+    }, telemetryInterval);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [telemetryInterval]);
 
   return { assets: data || [] };
 }

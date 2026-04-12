@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { LiveAsset } from '@/hooks/useLiveAssets';
+import { useSettingsStore } from '@/store/useSettingsStore';
 import { AlertCircle, Navigation, ShieldAlert, ShieldCheck } from 'lucide-react';
 
 interface GeofenceAlertsPanelProps {
@@ -10,14 +11,16 @@ interface GeofenceAlertsPanelProps {
 }
 
 export function GeofenceAlertsPanel({ assets }: GeofenceAlertsPanelProps) {
+  const polarBoundary = useSettingsStore(state => state.polarBoundary);
+
   const alerts = useMemo(() => {
-    // Determine alerts based on hardcoded boundaries and status thresholds
-    const generated = assets.map(asset => {
-      const lat = asset.position[0];
-      const lng = asset.position[1];
-      
-      // Simulate High-Risk Zones
-      const inDangerZone = (lat > 65 || lat < -50); // Polar Regions warning
+      // Determine alerts based on bound settings and status thresholds
+      const generated = assets.map(asset => {
+        const lat = asset.position[0];
+        const lng = asset.position[1];
+        
+        // Simulate High-Risk Zones dynamically based on user settings
+        const inDangerZone = (lat > polarBoundary || lat < -polarBoundary); // Polar Regions warning
       const isSlowShip = asset.type === 'ship' && asset.speed < 10 && asset.status === 'active'; // Ships crawling = pirate risk/ice?
       const isDelayed = asset.status === 'delayed';
 
@@ -36,7 +39,7 @@ export function GeofenceAlertsPanel({ assets }: GeofenceAlertsPanelProps) {
     // Sort by severity (high -> medium -> low)
     const severityRank: Record<string, number> = { high: 3, medium: 2, low: 1 };
     return generated.sort((a, b) => severityRank[b!.severity] - severityRank[a!.severity]);
-  }, [assets]);
+  }, [assets, polarBoundary]);
 
   return (
     <Card className="flex flex-col h-full">

@@ -42,3 +42,12 @@ This document tracks all the architectural and feature changes performed iterati
 - Designed the **Fleet Distribution Chart** to visualize real-time breakdowns of asset status and physical vehicle types dynamically.
 - Developed an **Efficiency Trends Chart**, projecting real-time velocity arrays against overall active operation density as moving timeline data.
 - Built the **Geofence Alerts Panel**, a live rules-engine UI that loops through operating assets globally and raises priority security/safety warnings if an asset enters hazardous latitudinal zones (like the poles) or slows down critically in active lanes.
+
+## Increment 8: Application Settings & Global State
+**Focus:** User configuration via Zustand Store
+- Abstracted hardcoded map boundaries and simulation timings out of complex React components.
+- Integrated the **Zustand** state-management library connected to browser `localStorage` as `omnitrack-settings`.
+- Established a persistent `useSettingsStore` to distribute application parameters synchronously.
+- Built a sophisticated `/settings` dashboard capable of real-time mutations with visual interactive sliders.
+- Connected the `useLiveAssets` React Query fetch-loop to the global store, allowing users to forcefully choke or accelerate API network traffic.
+- Connected the `GeofenceAlertsPanel` warning thresholds to the Global State, allowing administrators to expand or contract hazardous operational tracking borders live.
