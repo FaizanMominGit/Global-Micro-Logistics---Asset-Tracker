@@ -51,3 +51,10 @@ This document tracks all the architectural and feature changes performed iterati
 - Built a sophisticated `/settings` dashboard capable of real-time mutations with visual interactive sliders.
 - Connected the `useLiveAssets` React Query fetch-loop to the global store, allowing users to forcefully choke or accelerate API network traffic.
 - Connected the `GeofenceAlertsPanel` warning thresholds to the Global State, allowing administrators to expand or contract hazardous operational tracking borders live.
+
+## Increment 9: Interactive Dedicated Live Map
+**Focus:** Full-Screen Geospatial Visualization
+- Designed a new `/map` application route presenting an immersive, full-height geospatial dashboard.
+- Engineered `InteractiveLiveMap.tsx`, a specialized wrapper for `react-leaflet` that watches state props and natively executes high-performance Map UI routines (`useMap().flyTo()`) out of the React rendering pipeline.
+- Added Theme-Aware Mapping: The base CARTO map tiles dynamically pivot from "Voyager" (Light Mode) to "Dark Matter" (Dark Mode) based on your system configuration.
+- Crafted `AssetFlyoutList.tsx`, replacing raw text fields with intuitive UI cards acting as an operational directory, enabling one-click "fly-to" logic for instantaneous asset tracking across the globe.
