@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { redis } from "@/lib/redis";
 
 const prisma = new PrismaClient();
 
@@ -37,6 +38,8 @@ export async function POST() {
     });
 
     await Promise.all(updates);
+
+    await redis.del("assets:all");
 
     return NextResponse.json({ message: "Assets successfully synchronized" });
   } catch (error) {

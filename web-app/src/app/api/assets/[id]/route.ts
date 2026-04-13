@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { redis } from "@/lib/redis";
 
 const prisma = new PrismaClient();
 
@@ -47,6 +48,8 @@ export async function PATCH(
       },
     });
 
+    await redis.del("assets:all");
+
     return NextResponse.json(updatedAsset);
   } catch (error) {
     console.error("PATCH Asset Error:", error);
@@ -70,6 +73,8 @@ export async function DELETE(
     await prisma.asset.delete({
       where: { id },
     });
+
+    await redis.del("assets:all");
 
     return NextResponse.json({ success: true, message: "Asset decommissioned successfully" });
   } catch (error) {

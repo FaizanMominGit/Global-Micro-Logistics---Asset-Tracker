@@ -1,11 +1,21 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { redis } from "@/lib/redis";
 
 const prisma = new PrismaClient();
 
 export async function GET() {
   try {
+    const cachedAssets = await redis.get("assets:all");
+    if (cachedAssets) {
+      return NextResponse.json(JSON.parse(cachedAssets));
+    }
+
     const assets = await prisma.asset.findMany();
+    
+    // Cache for 5 seconds as fallback, though it's manually invalidated on sync
+    await redis.set("assets:all", JSON.stringify(assets), "EX", 5);
+    
     return NextResponse.json(assets);
   } catch (error) {
     console.error("Database Error:", error);
@@ -31,6 +41,8 @@ export async function POST(req: Request) {
         speed: 0,
       },
     });
+
+    await redis.del("assets:all");
 
     return NextResponse.json(asset);
   } catch (error) {
