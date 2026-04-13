@@ -81,13 +81,14 @@ This document tracks all the architectural and feature changes performed iterati
 - Implemented real-time **Geofence Breach Alerts** that trigger instantly when assets enter hazardous polar boundaries.
 - Added connection status and speed delay notifications to the centralized push-engine.
 
+## Increment 13: Cloud Infrastructure & Containerization
+**Focus:** Scalability & High-Speed Edge Delivery
+- Built Docker and Docker Compose configurations pointing to a local deployment.
+- Successfully migrated the primary datastore from local SQLite to a scalable **PostgreSQL** instance.
+- Engineered a **Redis** caching layer around the Next.js API constraints. Read operations (polling) now bypass PostgreSQL and fetch directly from RAM, ensuring global latency requirements are met.
+
 ## Future Increments Roadmap
 Based on the `SYSTEM_DESIGN.md`, the following increments are queued to transition this monolithic MVP into an enterprise-grade distributed system:
-
-### Increment 13: Cloud Infrastructure & Containerization
-- Build Docker configurations to containerize the Next.js application.
-- Migrate from local SQLite to PostgreSQL.
-- Introduce Redis caching layers for high-speed edge delivery.
 
 ### Increment 14: Offline-First capabilities & PWA
 - Register Service Workers to cache critical logistical data and support Offline-First rendering.
