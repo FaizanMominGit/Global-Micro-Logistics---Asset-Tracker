@@ -87,12 +87,15 @@ This document tracks all the architectural and feature changes performed iterati
 - Successfully migrated the primary datastore from local SQLite to a scalable **PostgreSQL** instance.
 - Engineered a **Redis** caching layer around the Next.js API constraints. Read operations (polling) now bypass PostgreSQL and fetch directly from RAM, ensuring global latency requirements are met.
 
+## Increment 14: Offline-First Capabilities & PWA
+**Focus:** Mobile Accessibility & Resilient Connectivity
+- Injected `@ducanh2912/next-pwa` to convert OmniTrack into a fully installable **Progressive Web App**.
+- Designed a custom **Web Manifest** and generated premium brand assets (`icon.png`) for cross-platform presence.
+- Engineered a dedicated **Offline Fallback Page** (`/offline`) that intercepts navigation when connectivity is lost, ensuring administrators maintain a consistent UI experience.
+- Configured metadata and Apple-specific web app directives for "Native-Like" feel on iOS and Android.
+
 ## Future Increments Roadmap
 Based on the `SYSTEM_DESIGN.md`, the following increments are queued to transition this monolithic MVP into an enterprise-grade distributed system:
-
-### Increment 14: Offline-First capabilities & PWA
-- Register Service Workers to cache critical logistical data and support Offline-First rendering.
-- Build mutation synchronization queues so drivers can log data in dead-zones (to trigger upon reconnection).
 
 ### Increment 15: Cross-Platform Native Applications
 - Scaffold a React Native (Expo) or Flutter codebase connecting securely to OmniTrack's existing backend architecture.
