@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -7,6 +7,10 @@ import QueryProvider from "@/components/QueryProvider";
 import { Toaster } from "@/components/ui/Toaster";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+
+export const viewport: Viewport = {
+  themeColor: "#0f172a",
+};
 
 export const metadata: Metadata = {
   title: "OmniTrack | Global Asset Management",
