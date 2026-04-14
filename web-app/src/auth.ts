@@ -14,15 +14,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        console.log("[Auth] Login attempt for:", credentials?.email);
+        if (!credentials?.email || !credentials?.password) {
+          console.warn("[Auth] Missing email or password in credentials");
+          return null;
+        }
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string }
         });
 
-        if (!user || !user.password) return null;
+        if (!user || !user.password) {
+          console.warn("[Auth] User not found:", credentials.email);
+          return null;
+        }
 
         const isPasswordValid = compareSync(credentials.password as string, user.password);
+        console.log("[Auth] Password valid:", isPasswordValid);
 
         if (!isPasswordValid) return null;
 

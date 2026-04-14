@@ -97,8 +97,15 @@ This document tracks all the architectural and feature changes performed iterati
 ## Future Increments Roadmap
 Based on the `SYSTEM_DESIGN.md`, the following increments are queued to transition this monolithic MVP into an enterprise-grade distributed system:
 
-### Increment 15: Cross-Platform Native Applications
-- Scaffold a React Native (Expo) or Flutter codebase connecting securely to OmniTrack's existing backend architecture.
+## Increment 15: Cross-Platform Native Mobile Application
+**Focus:** Field Operator Cockpit — React Native + Expo
+- Scaffolded a production-grade **React Native (Expo SDK 54)** application in `mobile-app/` that connects to the existing Next.js backend via REST — zero backend changes required.
+- Implemented **Expo Router** (file-based navigation, identical DX to Next.js App Router) with a three-tab native shell: **Dashboard**, **Live Map**, and **Assets**.
+- Built a secure **Login Screen** that authenticates against the Auth.js Credentials endpoint and persists the JWT session token in **Expo SecureStore** (device keychain), the industry-standard pattern for native clients.
+- **Dashboard Tab:** Live KPI cards (Active Shipments, Avg Speed, Alerts), fleet status progress bars, and a recent-assets list — all powered by TanStack Query with a 3-second polling interval and pull-to-refresh gesture.
+- **Live Map Tab:** Full-screen `react-native-maps` with custom emoji markers per asset type, status-coloured pips, dark map style, rich tooltip callouts, and automatic `fitToCoordinates` on load.
+- **Assets Tab:** Searchable, filterable flat list (by type: Ship/Truck/Plane and free-text search) with a `@gorhom/bottom-sheet` telemetry drawer that snaps open on asset tap for coordinate, speed, and timestamp drill-down.
+- Mirrored the web-app's **Zustand** settings store for configurable polling intervals; shared TypeScript types keep the API contract in sync across both apps.
 
 ### Increment 16: Enterprise Observability
 - Integrate Sentry for continuous error tracking and exception handling.
